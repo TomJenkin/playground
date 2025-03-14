@@ -18,6 +18,7 @@
 
 (print (list-head my-list 3))
 
+(print (+ 44 55))
 
 ;(newline)
 
