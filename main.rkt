@@ -10,3 +10,22 @@
 (print hello-world)
 (print (car my-list))
 (print (cdr my-list))
+
+(define (self-referential)
+  (define program-length (string-length "(define (self-referential)... )"))
+  (display "I am a program of length: ")
+  (display program-length)
+  (newline))
+
+(self-referential)
+
+;(define (liar) (not (liar)))
+;(display (liar)) ;; Causes infinite recursion
+
+(define (self-reference stmt)
+  (string-append "The following statement is false: " stmt))
+
+(define paradox (self-reference "This statement is false."))
+
+(display paradox) ;; Output: The following statement is false: This statement is false.
+(newline)
