@@ -29,5 +29,3 @@
 
 (display paradox) ;; Output: The following statement is false: This statement is false.
 (newline)
-
-(display (+ 4 2))
