@@ -31,3 +31,28 @@
 (newline)
 
 (display (string-append "hello" " there"))
+(newline)
+
+(define (describe-number n)
+  (case n
+    ((1) "One")
+    ((2 3 4) "Small number")
+    ((5 6 7 8 9 10) "Medium number")
+    (else "Large number")))
+
+;; Example usage
+(display (describe-number 2))  ;; Output: "Small number"
+(newline)
+(display (describe-number 7))  ;; Output: "Medium number"
+(newline)
+(display (describe-number 15)) ;; Output: "Large number"
+(newline)
+
+(define (match-string s)
+  (case s
+    ("hello" 1) 
+    ("fred" 2)
+    (else 3)))
+
+(display (match-string "fred"))
+(newline)
