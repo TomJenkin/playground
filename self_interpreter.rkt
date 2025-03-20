@@ -2,6 +2,7 @@
 
 (define eval
   (lambda (expr env)
+    (display "Evaluating: ") (display expr) (newline)
     (cond
       ((symbol? expr) (lookup expr env))
       ((not (pair? expr)) expr)
@@ -17,10 +18,10 @@
          (set-global! expr env)
          'ok))
       (else
-       (apply (eval (car expr) env)
-              (map (lambda (e) (eval e env)) (cdr expr)))))))
+       (my-apply (eval (car expr) env)
+                 (map (lambda (e) (eval e env)) (cdr expr)))))))
 
-(define apply
+(define my-apply
   (lambda (proc args)
     (cond
       ((primitive-procedure? proc) (apply-primitive proc args))
@@ -28,16 +29,16 @@
        (eval (caddr proc) (extend-env (cadr proc) args (cadddr proc))))
       (else
        (display "Unknown procedure type: ") (display proc) (newline)
-       #f)))) ;; Returns #f instead of error
+       #f)))) 
 
 (define lookup
   (lambda (var env)
     (cond
-      ((null? env)
+      ((assoc var env) => cdr)
+      ((assoc var global-env) => cdr)
+      (else 
        (display "Unbound variable: ") (display var) (newline)
-       #f)  ;; Returns #f instead of throwing an error
-      ((eq? var (caar env)) (cdar env))
-      (else (lookup var (cdr env))))))
+       #f))))
 
 (define extend-env
   (lambda (params args env)
@@ -49,16 +50,17 @@
 
 (define apply-primitive
   (lambda (proc args)
-    (apply proc args)))
+    (apply proc args))) ;; This uses Scheme's built-in `apply`
 
-;; Global environment (now mutable)
 (define global-env '())
 
 (define set-global!
   (lambda (expr env)
-    (set! global-env (cons (cons (cadr expr) (eval (caddr expr) env)) global-env))))
+    (let ((var (cadr expr))
+          (val (eval (caddr expr) env)))
+      (set! global-env (cons (cons var val) global-env)))))
 
-;; Initialize global environment with primitive operations
+;; Initialize global environment
 (set! global-env
   (list (cons '+ +)
         (cons '- -)
@@ -69,7 +71,7 @@
         (cons '= =)
         (cons 'display display)))
 
-;; Example usage
+;; Test Cases
 (eval '(define square (lambda (x) (* x x))) global-env)
 (display (eval '(square 5) global-env)) ;; Should print 25
 (newline)
