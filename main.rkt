@@ -56,3 +56,37 @@
 
 (display (match-string "fred"))
 (newline)
+
+; tracing example...
+
+(define (trace-wrapper f)
+  (lambda args
+    (display "Calling: ") (display f) (display " with args ") (display args) (newline)
+    (let ((result (apply f args)))
+      (display "Result: ") (display result) (newline)
+      result)))
+
+(define (square x)
+  (* x x))
+
+;; Manually wrap `square` in trace
+(define square-traced (trace-wrapper square))
+
+;; Call the traced function
+(square-traced 5)
+
+(define (fn1 x) (+ x 3))
+
+(fn1 33)
+
+(car '(10 20 30))  ; => 10
+(cdr '(10 20 30))  ; => (20 30)
+(cons 5 '(10 20))  ; => (5 10 20)
+
+;(print-ast '(+ 1 (* 2 3)))
+
+;(print-ast '(factorial 33))
+
+;(print-ast factorial)
+
+(print-ast '(+ 2 3))
